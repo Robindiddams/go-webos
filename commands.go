@@ -14,6 +14,9 @@ const (
 	// ApplicationManagerForegroundAppCommand returns information about the forgeground app.
 	ApplicationManagerForegroundAppCommand Command = "ssap://com.webos.applicationManager/getForegroundAppInfo"
 
+	// ApplicationManagerListAppsCommand returns information about the forgeground app.
+	ApplicationManagerListAppsCommand Command = "ssap://com.webos.applicationManager/listApps"
+
 	// AudioGetVolumeCommand returns information about the TV's configured audio output volume.
 	AudioGetVolumeCommand Command = "ssap://audio/getVolume"
 
@@ -109,6 +112,20 @@ func (tv *TV) CurrentApp() (*App, error) {
 	a := &App{}
 	err = mapstructure.Decode(msg.Payload, a)
 	return a, err
+}
+
+// CurrentApp returns information about the current app.
+func (tv *TV) ListApps() ([]*App, error) {
+	msg, err := tv.Command(ApplicationManagerListAppsCommand, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := struct {
+		Apps []*App `json:"apps"`
+	}{}
+	err = mapstructure.Decode(msg.Payload, &resp)
+	return resp.Apps, err
 }
 
 // GetVolume returns information about the audio output volume.
@@ -318,6 +335,18 @@ func (tv *TV) KeyRight() error {
 
 func (tv *TV) KeyOk() (Message, error) {
 	return tv.Command(KeyEnterCommand, nil)
+}
+
+func (tv *TV) KeyEnter() error {
+	if tv.input == nil {
+		var err error
+		tv.input, err = tv.createInput()
+		if err != nil {
+			return err
+		}
+	}
+	tv.input.SendButton("ENTER")
+	return nil
 }
 
 func (tv *TV) KeyBack() error {
