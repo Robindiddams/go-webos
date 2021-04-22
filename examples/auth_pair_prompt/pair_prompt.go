@@ -1,29 +1,14 @@
 package main
 
 import (
-	"crypto/tls"
 	"fmt"
 	"log"
-	"net"
-	"time"
 
-	"github.com/gorilla/websocket"
-
-	webos "github.com/kaperys/go-webos"
+	webos "github.com/robindiddams/go-webos"
 )
 
 func main() {
-	dialer := websocket.Dialer{
-		HandshakeTimeout: 10 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-		NetDial: (&net.Dialer{
-			Timeout: time.Second * 5,
-		}).Dial,
-	}
-
-	tv, err := webos.NewTV(&dialer, "192.168.0.186")
+	tv, err := webos.NewTV("192.168.0.186")
 	if err != nil {
 		log.Fatalf("could not dial: %v", err)
 	}

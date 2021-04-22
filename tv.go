@@ -1,9 +1,11 @@
 package webos
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net"
 	"sync"
 	"time"
 
@@ -31,7 +33,17 @@ type TV struct {
 }
 
 // NewTV dials the socket and returns a pointer to a new TV.
-func NewTV(dialer *websocket.Dialer, ip string) (*TV, error) {
+func NewTV(ip string) (*TV, error) {
+	dialer := websocket.Dialer{
+		HandshakeTimeout: 10 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+			// TODO: include lg's self signed cert
+		},
+		NetDial: (&net.Dialer{
+			Timeout: time.Second * 5,
+		}).Dial,
+	}
 	addr := fmt.Sprintf("%s://%s:%d", Protocol, ip, Port)
 	ws, resp, err := dialer.Dial(addr, nil)
 	if err != nil {

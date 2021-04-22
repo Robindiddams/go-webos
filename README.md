@@ -39,7 +39,8 @@ tv.Notification("📺👌")
 
 - [x] make the examples runnable
 - [ ] add `Discover` method to search local network for tv (if feasable without extraneous dependencies)
-- [ ] internalize the Dialer and MessageHandler
+- [x] internalize the Dialer
+- [ ] internalize MessageHandler
 - [ ] use json.RawMessage for partial decoding of messages instead of github.com/mitchellh/mapstructure
 - [ ] maybe switch to easyjson
 - [ ] use standard go errors
