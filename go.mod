@@ -1,4 +1,4 @@
-module github.com/kaperys/go-webos
+module github.com/robindiddams/go-webos
 
 go 1.16
 
