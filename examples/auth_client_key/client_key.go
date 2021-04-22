@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"log"
 	"net"
+	"os"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -12,6 +13,11 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 3 {
+		log.Fatalf("must include an ip address of the tv and client key")
+	}
+	ipAddr := os.Args[1]
+	clientKey := os.Args[2]
 	dialer := websocket.Dialer{
 		HandshakeTimeout: 10 * time.Second,
 		TLSClientConfig: &tls.Config{
@@ -21,8 +27,7 @@ func main() {
 			Timeout: time.Second * 5,
 		}).Dial,
 	}
-
-	tv, err := webos.NewTV(&dialer, "192.168.1.67")
+	tv, err := webos.NewTV(&dialer, ipAddr)
 	if err != nil {
 		log.Fatalf("could not dial: %v", err)
 	}
@@ -30,7 +35,7 @@ func main() {
 
 	go tv.MessageHandler()
 
-	if err = tv.AuthoriseClientKey("c219d8fbcee3839619dd80d6d9c57ad1"); err != nil {
+	if err = tv.AuthoriseClientKey(clientKey); err != nil {
 		log.Fatalf("could not authorise using client key: %v", err)
 	}
 
