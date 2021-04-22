@@ -5,14 +5,7 @@ A small Go library for interaction with webOS enabled TVs. ~Tested on LG webOS T
 [![Go Report Card](https://goreportcard.com/badge/github.com/kaperys/go-webos)](https://goreportcard.com/report/github.com/kaperys/go-webos)
 
 ```go
-dialer := websocket.Dialer{
-    HandshakeTimeout: 10 * time.Second,
-    // the TV uses a self-signed certificate
-    TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-    NetDial: (&net.Dialer{Timeout: time.Second * 5}).Dial,
-}
-
-tv, err := webos.NewTV(&dialer, "<tv-ipv4-address>")
+tv, err := webos.NewTV("<tv-ipv4-address>")
 if err != nil {
     log.Fatalf("could not dial TV: %v", err)
 }
@@ -44,5 +37,9 @@ tv.Notification("📺👌")
 - [ ] use json.RawMessage for partial decoding of messages instead of github.com/mitchellh/mapstructure
 - [ ] maybe switch to easyjson
 - [ ] use standard go errors
+
+## Long term goals
+
+I would ideally like to have this on par with [PyWebOSTV](https://github.com/supersaiyanmode/PyWebOSTV) as far as features.
 
 See [examples](examples/) for usage.
