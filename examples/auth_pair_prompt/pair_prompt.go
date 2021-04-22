@@ -23,7 +23,7 @@ func main() {
 		}).Dial,
 	}
 
-	tv, err := webos.NewTV(&dialer, "192.168.1.3")
+	tv, err := webos.NewTV(&dialer, "192.168.0.186")
 	if err != nil {
 		log.Fatalf("could not dial: %v", err)
 	}
